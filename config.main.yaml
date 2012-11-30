@@ -1,0 +1,210 @@
+host: 'kornbluth.freenode.net'
+port: 6665
+ident: 'pyChao'
+password: 'dwarfdwarf'
+nickname: 'Sacred-Chao'
+realname: 'Sacred-Chao auf Python'
+channels: 
+    - '#Zanzibar'
+    - '#g33ky'
+    - '#Sacred-Chao'
+#    - '#seto-gmbh'
+    - '#piratenpartei-sachsen'
+#    - '#countdown'
+    - '#chaosradio'
+    - '#beem'
+show messages:
+    - 'error'
+    - 'notice'
+    - 'routine'
+modules:
+    mod_triggers:
+        file: mod_triggers
+        class: mod_triggers
+        config:
+            dbpath: '../db/fact.sqlite'
+            trigger_time: '-7 days'
+
+################################################################################
+# DEPRECATED - ersetzt durch funktionalität in Webchao (Djang-Projekt)         #
+################################################################################
+#    export_web:
+#        file:         export_web
+#        class:        export_web
+#        config:
+#            dbpath:     '../db/fact.sqlite'
+#            dir:        'html/'
+#            pub_root:   'http://home.g33ky.de/fact/'
+#            css:        '/css/facts.css'
+##            analytics:  'UA-8889221-1'
+#            feed:       '/lastfacts.xml'
+#    export_rss:
+#        file:             export_rss
+#        class:            export_rss
+#        config:
+#            dbpath:       '../db/fact.sqlite'
+#            length:       25
+#            file:         'last.xml'
+#            adm_mail:     facts@g33ky.de
+#            pub_url:      http://home.g33ky.de/lastfacts.xml
+#            link:         http://g33ky.de
+#            description:  'die neuesten Facts des pyChao-IRC-Bots'
+#            rights:       'cc-by-sa'
+#            web_url:      'http://home.g33ky.de/fact/'
+################################################################################
+
+    rss:
+        file: rss
+        class: mod_rss
+        config:
+            maxlines: 7
+            defaultlines: 3
+            maxtitlelen: 100
+            help: 'Ruft einen Newsfeed ab. Ein numerischer Parameter => entsprechend viele Elemente; zwei numerische => Elemente von-bis; Textparameter => Textsuche in Überschriften'
+            feeds:
+#                dat*: 'https://pod.geraspora.de/public/drazraeltod.atom'
+#                dat.cubbies: 'http://cubbi.es/a9eb78101a70ed20?format=atom'
+#                chrono.gr: 'http://www.google.com/reader/public/atom/user%2F00885855959396402091%2Fstate%2Fcom.google%2Fbroadcast'
+                g33ky: 'http://www.g33ky.de/feed/blog'
+#                comics: 'http://feeds.feedburner.com/webcomix'
+#                quotes: 'http://feeds.feedburner.com/quotesViaDrAzraelTod'
+#                qimonda: 'http://feeds.feedburner.com/Qimonda'
+                dat.gr: 'http://feeds.feedburner.com/StarredByDrAzraelTod'
+                fefe: 'http://blog.fefe.de/rss.xml'
+                dat.fm: http://ws.audioscrobbler.com/1.0/user/Dr_Azrael_Tod/recenttracks.rss
+                dat.fm.loved: 'http://ws.audioscrobbler.com/2.0/user/Dr_Azrael_Tod/lovedtracks.rss'
+                snoo.fm: http://ws.audioscrobbler.com/1.0/user/sirsnookie/recenttracks.rss
+                snoo.fm.loved: 'http://ws.audioscrobbler.com/2.0/user/sirsnookie/lovedtracks.rss'
+                makx.fm: 'http://ws.audioscrobbler.com/1.0/user/Profmakx/recenttracks.rss'
+                makx.fm.loved: 'http://ws.audioscrobbler.com/2.0/user/profmakx/lovedtracks.rss'
+                fynn.fm: 'http://ws.audioscrobbler.com/1.0/user/fynn__/recenttracks.rss'
+                fynn.fm.loved: 'http://ws.audioscrobbler.com/2.0/user/fynn__/lovedtracks.rss'
+#                loba.fm: http://ws.audioscrobbler.com/1.0/user/1oba/recenttracks.rss
+#                cindy.fm: http://ws.audioscrobbler.com/1.0/user/Amidala1/recenttracks.rss
+#                wolf.fm: 'http://ws.audioscrobbler.com/1.0/user/Grauw0lf/recenttracks.rss'
+#                dat.ff: http://friendfeed.com/drazraeltod?format=atom
+#                news: 'http://news.google.de/?ned=de&topic=po&output=rss'
+#                price: 'http://news.google.de/news?ned=de&hl=de&ned=de&q=%5Boil%7Cgold%7Cmetal%5Dprice+nyse&ie=UTF-8&nolr=1&output=rss'
+                heise: 'http://www.heise.de/newsticker/heise-atom.xml'
+                lmag: 'http://www.linux-magazin.de/rss/feed/news'
+#                zanzibar: 'http://friendfeed.com/rooms/g33ky?format=atom'
+                wdr2k: 'http://podcast.wdr.de/radio/wdr2kabarett.xml'
+                'känguru': 'http://www.fritz.de/media/podcasts/serien/neues_vom_kaenguru.feed.podcast.xml'
+#                dat.test: 'http://alpha.libre.fm/rdf.php?fmt=rss&page=%2Fuser%2FDr_Azrael_Tod%2Frecent-tracks'
+                golem: 'http://rss.golem.de/rss.php?feed=ATOM1.0'
+#                c3d2: 'http://www.c3d2.de/news-atom.xml'
+#                pentaradio: 'http://www.c3d2.de/pentaradio.xml'
+#                c3d2pod: 'http://www.c3d2.de/podcast.xml'
+                soup: 'http://soup.g33ky.de/rss'
+    facts:
+        file: facts
+        class: mod_facts
+        config:
+            dbpath: '../db/fact.sqlite'
+            deleting_users: [Dr_Azrael_Tod, profmakx, Snookie]
+            fact_url: 'http://g33ky.de/fid/%s'
+    nicknames:
+        file: mod_nicknames
+        class: mod_nicknames
+        config:
+            none: ''
+    calc:
+        file: mod_calc
+        class: mod_calc
+        config:
+            none: ''
+    fun:
+        file: mod_fun
+        class: mod_fun
+        config:
+            help:   'verteile Bier und Kekse! Jeweils mit +/-/?keks oder +/-/?bier'
+            dbpath: '../db/fun.sqlite'
+            items:
+                keks:
+                    singular:   'Keks'
+                    plural:     'Kekse'
+                bier: 
+                    singular:   'Bier'
+                    plural:     'Biere'
+    date:
+        file: mod_ddate
+        class: mod_ddate
+        config:
+            none: ''
+    system:
+        file: system
+        class: mod_system
+        config:
+            eval_allowed:   ['math','acos', 'asin', 'atan', 'atan2', 'ceil', 'cos', 'cosh', 'de grees', 'e', 'exp', 'fabs', 'floor', 'fmod', 'frexp', 'hypot', 'ldexp', 'log', 'log10', 'modf', 'pi', 'pow', 'radians', 'sin', 'sinh', 'sqrt', 'tan', 'tanh', 'dir']
+
+overwrite profiles:
+    debug:
+        show messages:
+            - 'error'
+            - 'notice'
+            - 'routine'
+        nickname: 'Test-Chao'
+        realname: 'Sacred-Chao auf Python (Debugmodus)'
+        channels: 
+            - '#zanzibar'
+            - '#pyChao'
+        modules:
+            mod_triggers:
+                file: mod_triggers
+                class: mod_triggers
+                config:
+                    dbpath: '../db/fact.sqlite'
+                    trigger_time: '-2 days'
+            system:
+                file: system
+                class: mod_system
+                config:
+                    eval_allowed:   ['']
+            rss:
+                file: rss
+                class: mod_rss
+                config:
+                    maxlines: 7
+                    defaultlines: 3
+                    maxtitlelen: 100
+                    help: 'Ruft einen Newsfeed ab. Ein numerischer Parameter => entsprechend viele Elemente; zwei numerische => Elemente von-bis; Textparameter => Textsuche in Überschriften'
+                    feeds:
+                        dat.gr: 'http://www.google.com/reader/public/atom/user/00910410964970600802/state/com.google/broadcast'
+                        chrono.gr: 'http://www.google.com/reader/public/atom/user%2F00885855959396402091%2Fstate%2Fcom.google%2Fbroadcast'
+                        g33ky: 'http://drazraeltod.wordpress.com/feed'
+                        comics: 'http://feeds.feedburner.com/webcomix'
+                        wichtig: 'http://feeds.feedburner.com/StarredByDrAzraelTod'
+                        fefe: 'http://blog.fefe.de/rss.xml'
+                        dat.fm: http://ws.audioscrobbler.com/1.0/user/Dr_Azrael_Tod/recenttracks.rss
+                        makx.fm: http://ws.audioscrobbler.com/1.0/user/Profmakx/recenttracks.rss
+                        wolf.fm: 'http://ws.audioscrobbler.com/1.0/user/Grauw0lf/recenttracks.rss'
+                        heise: 'http://www.heise.de/newsticker/heise-atom.xml'
+                        lmag: 'http://www.linux-magazin.de/rss/feed/news'
+                        zanzibar: 'http://friendfeed.com/rooms/g33ky?format=atom'
+    dat:
+        show messages:
+            - 'error'
+            - 'notice'
+        nickname: 'pyChao_DATtest'
+        realname: 'pyChao im Debugmodus bei DAT'
+        channels:
+            - '#zanzibar'
+        ident: 'dat-chao'
+    makx:
+        nickname: 'makxChao'
+        realname: 'Die Plage um alle plagen zu beenden!'
+        channels: 
+           - '#zanzibar'
+        port: 6665
+    euirc:
+        host: 'irc6.euirc.net'
+        channels:
+            - '#zanzibar'
+            - '#ipv6'
+            - '#penis'
+    c3d2:
+        host: 'irc.hq.c3d2.de'
+        port: '6667'
+        channels:
+            - 'sacred-chao'
+            - 'c3d2'
