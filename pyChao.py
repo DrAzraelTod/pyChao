@@ -36,6 +36,7 @@ class PyChao(object):
         self.config = conf.data
 
         self.commands = {}
+        self.channels = {}
 
         self.import_modules()
         self.connect()
@@ -131,6 +132,12 @@ class PyChao(object):
                 if(line[0]=='ERROR' and line[1] == ':Closing' and line[2] =='Link:'):
                   print("[Fehler] Verbindung extern getrennt")
                   sys.exit(2)
+                if(line[1] == '353'):
+                    # NAMES reply
+                    names = line[5:]
+                    status_indicators = '@!*+%'
+                    names = [n.strip(status_indicators) for n in names]
+                    self.channels[line[4]] = names
                 if(len(line)>=4):
                     params = self.decode_msg(line)
                     #:NickServ!services@euirc.net NOTICE Sacred-Chao :This nickname is registered and protected.  If it is your
@@ -198,7 +205,6 @@ class PyChao(object):
     def send(self,msg):
         msg2 = msg.encode('utf-8') + '\r\n' 
         self.socket.send(msg2)
-
 
 def usage():
     print("Folgende Parameter stehen zur Auswahl:")
