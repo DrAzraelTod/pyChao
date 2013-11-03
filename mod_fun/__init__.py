@@ -39,6 +39,8 @@ class mod_fun(object):
         self.parent.privmsg(u':)', params.channel)
 
     def geben(self, params, name, words):
+        if (self.check_name(params.args[0], params.channel)):
+            return
         if len(params.args) == 1:
             if params.target == params.args[0]:
                 keks = self.aendern(params.target, 0, name)
@@ -50,6 +52,8 @@ class mod_fun(object):
             self.parent.privmsg(u'hast du nicht was vergessen? (Du hast %i %s)' % (self.aendern(params.target, 0, name), words['plural']), params.channel)
     
     def klauen(self, params, name, words):
+        if (self.check_name(params.args[0], params.channel)):
+            return
         if len(params.args) == 1:
             if params.target == params.args[0]:
                 self.parent.privmsg(u'Du klaust dir selber 1 %s. Das war eine drastische Änderung. NICHT!' % words['singular'], params.channel)
@@ -119,4 +123,10 @@ class mod_fun(object):
         else:
             self.parent.privmsg(u"Ich hab keine Ahnung was du mir damit sagen willst...", params.channel)
             return
-        
+
+    def check_name(self, target, channel):
+        valid_names = self.parent.channels[channel]
+        invalid = target not in valid_names
+        if (invalid):
+            self.parent.privmsg(u'%s ist gar nicht hier...' % target, channel)
+        return invalid
