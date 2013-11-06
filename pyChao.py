@@ -18,6 +18,21 @@ class Parameters(object):
         self.args = args
         self.whole_string = command+' '+self.follow
 
+class ChannelInfo(object):
+    def __init__(self, name, processing_names):
+        self.name = name
+        self.processing_names = processing_names
+        self.nicks = []
+
+    def add_nick(self, nick):
+        self.nicks.append(nick)
+
+    def add_nicks(self, nicks):
+        self.nicks += nicks
+
+    def remove_nick(self, nick):
+        self.nicks.remove(nick)
+
 class Logger(object):
     def __init__(self, file):
         self.file = file
