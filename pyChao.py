@@ -150,7 +150,7 @@ class PyChao(object):
                 if(line[1] == '353'):
                     # NAMES reply
                     names = line[5:]
-                    status_indicators = '@!*+%'
+                    status_indicators = '@!*+%&~:'
                     names = [n.strip(status_indicators) for n in names]
                     self.channels[line[4]] = names
                 if(len(line)>=4):
