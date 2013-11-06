@@ -125,7 +125,8 @@ class mod_fun(object):
             return
 
     def check_name(self, target, channel):
-        valid_names = self.parent.channels[channel]
+        channel_info = self.parent.channels[channel]
+        valid_names = channel_info.nicks
         invalid = target not in valid_names
         if (invalid):
             self.parent.privmsg(u'%s ist gar nicht hier...' % target, channel)
