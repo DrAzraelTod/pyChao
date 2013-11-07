@@ -153,6 +153,8 @@ class PyChao(object):
                     names = line[5:]
                     status_indicators = '@!*+%&~:'
                     names = [n.strip(status_indicators) for n in names]
+                    if not channel_name in self.channels:
+                        self.channels[channel_name] = ChannelInfo(channel_name, False)
                     if (self.channels[channel_name].processing_names):
                         self.channels[channel_name].processing_names = True
                     self.channels[channel_name].add_nicks(names)
