@@ -208,3 +208,8 @@ overwrite profiles:
         channels:
             - 'sacred-chao'
             - 'c3d2'
+    fynn:
+        nickname: 'SailorChao'
+        host: 'irc.euirc.net'
+        channels:
+            - '#wunderland'

@@ -18,6 +18,21 @@ class Parameters(object):
         self.args = args
         self.whole_string = command+' '+self.follow
 
+class ChannelInfo(object):
+    def __init__(self, name, processing_names):
+        self.name = name
+        self.processing_names = processing_names
+        self.nicks = []
+
+    def add_nick(self, nick):
+        self.nicks.append(nick)
+
+    def add_nicks(self, nicks):
+        self.nicks += nicks
+
+    def remove_nick(self, nick):
+        self.nicks.remove(nick)
+
 class Logger(object):
     def __init__(self, file):
         self.file = file
@@ -134,10 +149,36 @@ class PyChao(object):
                   sys.exit(2)
                 if(line[1] == '353'):
                     # NAMES reply
+                    channel_name = line[4]
                     names = line[5:]
-                    status_indicators = '@!*+%'
+                    status_indicators = '@!*+%&~:'
                     names = [n.strip(status_indicators) for n in names]
-                    self.channels[line[4]] = names
+                    if (self.channels[channel_name].processing_names):
+                        self.channels[channel_name].processing_names = True
+                    self.channels[channel_name].add_nicks(names)
+                if(line[1] == '366'):
+                    # end of NAMES reply
+                    channel_name = line[3]
+                    self.channels[channel_name].processing_names = False
+                if(line[1] == 'JOIN'):
+                    target = line[0][1:line[0].find('!')]
+                    if (target != self.config['nickname']):
+                        channel_name = line[2][1:]
+                        self.channels[channel_name].add_nick(target)
+                if(line[1] == 'PART'):
+                    target = line[0][1:line[0].find('!')]
+                    if (target != self.config['nickname']):
+                        channel_name = line[2]
+                        self.channels[channel_name].remove_nick(target)
+                if(line[1] == 'QUIT'):
+                    target = line[0][1:line[0].find('!')]
+                    for channel_info in self.channels.itervalues():
+                        channel_info.remove_nick(target)
+                if(line[1] == 'KICK'):
+                    if (line[3] == self.config['nickname']):
+                        self.remove_channel(channel)
+                    else:
+                        self.channels[line[2]].remove_nick(line[3])
                 if(len(line)>=4):
                     params = self.decode_msg(line)
                     #:NickServ!services@euirc.net NOTICE Sacred-Chao :This nickname is registered and protected.  If it is your
@@ -196,15 +237,20 @@ class PyChao(object):
         message = 'JOIN %s' % channel
         self.print_notice(message)
         self.send(message)
+        self.channels[channel] = ChannelInfo(channel, False)
         
     def part(self, channel):
         message = 'PART %s' % channel
         self.print_notice(message)
         self.send(message)
+        self.remove_channel(channel)
 
     def send(self,msg):
         msg2 = msg.encode('utf-8') + '\r\n' 
         self.socket.send(msg2)
+
+    def remove_channel(self, channel):
+        del self.channels[channel]
 
 def usage():
     print("Folgende Parameter stehen zur Auswahl:")
