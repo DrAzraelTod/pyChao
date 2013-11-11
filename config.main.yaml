@@ -23,7 +23,7 @@ modules:
         class: mod_triggers
         config:
             dbpath: '../db/fact.sqlite'
-            trigger_time: '-7 days'
+            trigger_time: '-14 days'
 
 ################################################################################
 # DEPRECATED - ersetzt durch funktionalität in Webchao (Djang-Projekt)         #
@@ -126,6 +126,9 @@ modules:
                 bier: 
                     singular:   'Bier'
                     plural:     'Biere'
+                penis:
+                    singular:   'Penis'
+                    plural:     'Penes'
     date:
         file: mod_ddate
         class: mod_ddate
@@ -197,7 +200,7 @@ overwrite profiles:
            - '#zanzibar'
         port: 6665
     euirc:
-        host: 'irc6.euirc.net'
+        host: 'irc.euirc.net'
         channels:
             - '#zanzibar'
             - '#ipv6'
@@ -208,3 +211,8 @@ overwrite profiles:
         channels:
             - 'sacred-chao'
             - 'c3d2'
+    fynn:
+        nickname: 'SailorChao'
+        host: 'irc.euirc.net'
+        channels:
+            - '#wunderland'
