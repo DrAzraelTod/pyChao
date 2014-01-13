@@ -67,7 +67,7 @@ class mod_fun(object):
             self.parent.privmsg(u'hast du nicht was vergessen?', params.channel)
     
     def aendern(self, name, amount, item):
-        keks = self.DBcursor.execute(u"SELECT nickname, count from kekse WHERE nickname like '%s' AND item =='%s' LIMIT 1" % (name, item)).fetchall()
+        keks = self.DBcursor.execute(u"SELECT nickname, count from kekse WHERE nickname like ? AND item ==? LIMIT 1", (name, item)).fetchall()
         if(len(keks)>0 and len(keks[0]) > 1):
             keks = keks[0][1]
             if amount == 0:
@@ -102,7 +102,7 @@ class mod_fun(object):
                 anrede=u"%s hat" % params.args[0]
             self.parent.privmsg(u"%s %i %s." % (anrede, keks, words['plural']), params.channel)
         elif len(params.args) == 0:
-            keks = self.DBcursor.execute(u"SELECT `nickname`, `count` from kekse WHERE item=='%s' AND `count`>=1 ORDER BY `count` DESC LIMIT 10" % (name)).fetchall()
+            keks = self.DBcursor.execute(u"SELECT `nickname`, `count` from kekse WHERE item==? AND `count`>=1 ORDER BY `count` DESC LIMIT 10", (name)).fetchall()
             if len(keks) <= 0:
                 self.parent.privmsg(u"Es gibt noch keine %s?" % words['plural'], params.channel)
                 return
