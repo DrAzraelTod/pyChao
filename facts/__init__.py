@@ -103,7 +103,10 @@ class mod_facts:
     def addfact(self,params):
         #Kommando !addfact, fügt neues fact ein
         if len(params.follow)>=1:
-            self.DBcursor.execute(u"INSERT INTO fact (nickname,channel,fact, date) VALUES (?, ?, ?, datetime('now'))",(params.target, params.channel, params.follow))
+            channel = params.channel
+            if params.query:
+               channel = u"Query"
+            self.DBcursor.execute(u"INSERT INTO fact (nickname,channel,fact, date) VALUES (?, ?, ?, datetime('now'))",(params.target, channel, params.follow))
             now_id = self.DBcursor.lastrowid
             msg = u"%s: Fact added [#%s] - %s" % (params.target, now_id, (self.config['fact_url'] % now_id))
             r1 = ur"[@#]([1-9][0-9]+)"
