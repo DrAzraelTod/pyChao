@@ -9,7 +9,7 @@ import re
 
 
 class Parameters(object):
-    def __init__(self, channel, command, target, message, args=''):
+    def __init__(self, channel, command, target, message, args='', query = False):
         self.channel = channel
         self.command = command
         self.target = target
@@ -17,6 +17,7 @@ class Parameters(object):
         self.follow = string.join(args)
         self.args = args
         self.whole_string = command+' '+self.follow
+        self.query = query
 
 class Logger(object):
     def __init__(self, file):
@@ -161,8 +162,11 @@ class PyChao(object):
         else:
             args = []
         target = line[0][1:line[0].find('!')]
-
-        return Parameters(channel, command, target, message, args)
+        query = False
+        if (channel == self.config['nickname']):
+            channel = target
+            query = True
+        return Parameters(channel, command, target, message, args, query)
         
 
     def parse_cmd(self, params):
