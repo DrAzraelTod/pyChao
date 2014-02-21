@@ -1,4 +1,4 @@
 #!/bin/bash
 export PYTHONIOENCODING=utf-8
-./freenode.sh | grep -v "PING :" > ./log/freenode.log &
-./euirc.sh | grep -v "PING :" > ./log/euirc.log
+nohup ./freenode.sh 0<&- &> grep -v "PING :" >> ./log/freenode.log &
+nohup ./euirc.sh 0<&- &> grep -v "PING :" >> ./log/euirc.log &
