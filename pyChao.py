@@ -43,11 +43,11 @@ class PyChao(object):
 
     def print_err(self,error):
         if 'error' in self.config['show messages']:
-            print('[Fehler] %s' % error)
+            print(u'[Fehler] %s' % error)
 
     def print_notice(self,ntc):
         if 'notice' in self.config['show messages']:
-            print('[Anmerkung] %s' % ntc)
+            print(u'[Anmerkung] %s' % self.encode_msg(ntc))
 
     def print_status(self,status):
         if 'routine' in self.config['show messages']:
