@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
-import math
-import pysvn
-import time
+import math, pysvn, time, random
 
 class mod_system:
+    ping_times = {}
+
     def __init__(self, parent,config):
         self.parent = parent
         self.config = config
@@ -18,14 +18,25 @@ class mod_system:
         self.parent.register_callback('!ping', self.ping, u'Sendet einen PING an den Server')
 
     def ping(self,params):
-        rand = "123456"
+        rand = str(random.randint(9999, 100000))
+        self.ping_times[rand] = time.time()
         self.parent.await_answer(['','PONG','', ':%s' % rand],self.pong)
         self.parent.send('PING '+rand)
         self.channel = params.channel
         self.parent.privmsg('[ping] warte...',params.channel)
         
-    def pong(self,line):
-        self.parent.privmsg('[pong] eingetroffen',self.channel)
+    def pong(self,params):
+        if (len(params)>=4):
+          key = str(params[3][1:])
+          if key in self.ping_times:
+            t = self.ping_times[key]
+            now = time.time()
+            diff = (now - float(t))*1000
+            self.parent.privmsg(u'[pong] eingetroffen nach %dms' % (diff),self.channel)
+          else:
+            self.parent.privmsg(u'[pong] eingetroffen, messung aber unmöglich - %s' % str(key), self.channel)
+        else:
+          self.parent.privmsg('[pong] eingetroffen',self.channel)
         
     def returnutf8(self,params):
         if(len(params.args)>=1):
