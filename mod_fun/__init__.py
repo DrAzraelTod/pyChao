@@ -74,11 +74,11 @@ class mod_fun(object):
                 return keks
             keks2 = keks+amount
             if (keks2 >= 1):
-                self.DBcursor.execute(u"UPDATE kekse set count=? WHERE item==? AND nickname like ?", (keks2, item, name))
+                self.DBcursor.execute(u"UPDATE kekse set count=? WHERE item==? AND lower(nickname)=lower(?) LIMIT 1", (keks2, item, name))
                 self.DBconn.commit()
                 return keks2
             else:
-                self.DBcursor.execute(u"UPDATE kekse set count=? WHERE nickname like ? AND item==?", (0, name, item))
+                self.DBcursor.execute(u"UPDATE kekse set count=? WHERE lower(nickname)=lower(?) AND item==? LIMIT 1", (0, name, item))
                 self.DBconn.commit()
                 if keks>0:
                     return 0
