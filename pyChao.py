@@ -163,7 +163,7 @@ class PyChao(object):
             args = []
         target = line[0][1:line[0].find('!')]
         query = False
-        if (channel == self.config['nickname']):
+        if (channel.lower() == self.config['nickname'].lower()):
             channel = target
             query = True
         return Parameters(channel, command, target, message, args, query)
