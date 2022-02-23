@@ -9,29 +9,15 @@ import re
 
 
 class Parameters(object):
-    def __init__(self, channel, command, target, message, args=''):
+    def __init__(self, channel, command, target, message, args='', query = False):
         self.channel = channel
         self.command = command
         self.target = target
         self.message = message
-        self.follow = string.join(args)
+        self.follow = " ".join(args)
         self.args = args
         self.whole_string = command+' '+self.follow
-
-class ChannelInfo(object):
-    def __init__(self, name, processing_names):
-        self.name = name
-        self.processing_names = processing_names
-        self.nicks = []
-
-    def add_nick(self, nick):
-        self.nicks.append(nick)
-
-    def add_nicks(self, nicks):
-        self.nicks += nicks
-
-    def remove_nick(self, nick):
-        self.nicks.remove(nick)
+        self.query = query
 
 class Logger(object):
     def __init__(self, file):
@@ -51,18 +37,17 @@ class PyChao(object):
         self.config = conf.data
 
         self.commands = {}
-        self.channels = {}
 
         self.import_modules()
         self.connect()
 
     def print_err(self,error):
         if 'error' in self.config['show messages']:
-            print('[Fehler] %s' % error)
+            print(u'[Fehler] %s' % error)
 
     def print_notice(self,ntc):
         if 'notice' in self.config['show messages']:
-            print('[Anmerkung] %s' % ntc)
+            print(u'[Anmerkung] %s' % self.encode_msg(ntc))
 
     def print_status(self,status):
         if 'routine' in self.config['show messages']:
@@ -76,7 +61,7 @@ class PyChao(object):
                 tempMod, cfg[mod]['class'])(self,cfg[mod]['config'])
 
     def register_callback(self,command,callback,helptext,regex=False):
-        if not self.commands.has_key(command):
+        if not command in self.commands:
             self.commands[command] = [callback, helptext, regex]
     
     def await_answer(self,msg_array, callback):
@@ -110,19 +95,19 @@ class PyChao(object):
                 self.print_status("trying: " + str(res))
                 self.socket = socket.socket(af, socktype, proto)
                 self.socket.settimeout(500)
-            except socket.error, msg:
+            except socket.error as msg:
                 self.print_err(msg)
                 continue
             try:
                 self.print_status("establishing connection")
                 self.socket.connect(sa)
-            except socket.error, msg:
+            except socket.error as msg:
                 self.print_err(msg)
                 self.socket.close()
                 continue
             break
-        self.socket.send('NICK %s\r\n' % self.config['nickname'])
-        self.socket.send('USER %s %s bla :%s\r\n' % (self.config['ident'], self.config['host'],
+        self.send('NICK %s\r\n' % self.config['nickname'])
+        self.send('USER %s %s bla :%s\r\n' % (self.config['ident'], self.config['host'],
                          self.config['realname']))
         self.msgwaitlist = []
         for channel in self.config['channels']:
@@ -130,15 +115,15 @@ class PyChao(object):
         self.identifyYourself()
         readbuffer = ''
         while True:
-            readbuffer=readbuffer+self.socket.recv(1024)
-            temp=string.split(readbuffer, '\n')
+            readbuffer=readbuffer+self.socket.recv(1024).decode('utf-8')
+            temp=readbuffer.split('\n')
             readbuffer=temp.pop()
             
             for line in temp:
                 self.print_status(line)
                 line=self.encode_msg(line)
-                line=string.rstrip(line)
-                line=string.split(line)
+                line=line.rstrip()
+                line=line.split()
                 if(line[0] == 'PING'):
                     self.send('PONG %s' % line[1])
                 if(line[1] == 'PONG'):
@@ -147,40 +132,6 @@ class PyChao(object):
                 if(line[0]=='ERROR' and line[1] == ':Closing' and line[2] =='Link:'):
                   print("[Fehler] Verbindung extern getrennt")
                   sys.exit(2)
-                if(line[1] == '353'):
-                    # NAMES reply
-                    channel_name = line[4]
-                    names = line[5:]
-                    status_indicators = '@!*+%&~:'
-                    names = [n.strip(status_indicators) for n in names]
-                    if not channel_name in self.channels:
-                        self.channels[channel_name] = ChannelInfo(channel_name, False)
-                    if (self.channels[channel_name].processing_names):
-                        self.channels[channel_name].processing_names = True
-                    self.channels[channel_name].add_nicks(names)
-                if(line[1] == '366'):
-                    # end of NAMES reply
-                    channel_name = line[3]
-                    self.channels[channel_name].processing_names = False
-                if(line[1] == 'JOIN'):
-                    target = line[0][1:line[0].find('!')]
-                    if (target != self.config['nickname']):
-                        channel_name = line[2][1:]
-                        self.channels[channel_name].add_nick(target)
-                if(line[1] == 'PART'):
-                    target = line[0][1:line[0].find('!')]
-                    if (target != self.config['nickname']):
-                        channel_name = line[2]
-                        self.channels[channel_name].remove_nick(target)
-                if(line[1] == 'QUIT'):
-                    target = line[0][1:line[0].find('!')]
-                    for channel_info in self.channels.itervalues():
-                        channel_info.remove_nick(target)
-                if(line[1] == 'KICK'):
-                    if (line[3] == self.config['nickname']):
-                        self.remove_channel(channel)
-                    else:
-                        self.channels[line[2]].remove_nick(line[3])
                 if(len(line)>=4):
                     params = self.decode_msg(line)
                     #:NickServ!services@euirc.net NOTICE Sacred-Chao :This nickname is registered and protected.  If it is your
@@ -211,12 +162,15 @@ class PyChao(object):
         else:
             args = []
         target = line[0][1:line[0].find('!')]
-
-        return Parameters(channel, command, target, message, args)
+        query = False
+        if (channel.lower() == self.config['nickname'].lower()):
+            channel = target
+            query = True
+        return Parameters(channel, command, target, message, args, query)
         
 
     def parse_cmd(self, params):
-        if self.commands.has_key(params.command):
+        if params.command in self.commands:
             self.commands[params.command][0](params)
         else:
             ret = False
@@ -239,20 +193,16 @@ class PyChao(object):
         message = 'JOIN %s' % channel
         self.print_notice(message)
         self.send(message)
-        self.channels[channel] = ChannelInfo(channel, False)
         
     def part(self, channel):
         message = 'PART %s' % channel
         self.print_notice(message)
         self.send(message)
-        self.remove_channel(channel)
 
     def send(self,msg):
-        msg2 = msg.encode('utf-8') + '\r\n' 
+        msg2 = msg.encode('utf-8') + '\r\n'.encode('utf-8') 
         self.socket.send(msg2)
 
-    def remove_channel(self, channel):
-        del self.channels[channel]
 
 def usage():
     print("Folgende Parameter stehen zur Auswahl:")
@@ -267,7 +217,7 @@ if __name__ == '__main__':
     longOptions = ['debug', 'mode=', 'help']
     try:
         opts, args = getopt.getopt(sys.argv[1:], shortOptions, longOptions)
-    except getopt.GetoptError, err:
+    except getopt.GetoptError as err:
         print("[Parameter-Fehler]  %s" % err)
         usage()
         sys.exit(2)

@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
-import math
-import pysvn
-import time
+import math, time, random
 
 class mod_system:
+    ping_times = {}
+
     def __init__(self, parent,config):
         self.parent = parent
         self.config = config
@@ -12,20 +12,29 @@ class mod_system:
 #        self.parent.register_callback('=',self.eval, u'Löst eine Gleichung und ähnliches via eval()')
         self.parent.register_callback('!join',self.join, u'Betritt einen Channel, !leave zum Rauswerfen')
         self.parent.register_callback('!leave',self.part, u'Verlässt den aktuellen Channel')
-        self.parent.register_callback('!lversion', self.long_version, u'Zeigt die aktuelle Version an')
-        self.parent.register_callback('!version', self.short_version, u'Zeigt die aktuelle Version an')
         self.parent.register_callback('!utf', self.returnutf8, u'Gibt den übergebenen Text wieder aus (UTF-8-Codierungstest)')
         self.parent.register_callback('!ping', self.ping, u'Sendet einen PING an den Server')
 
     def ping(self,params):
-        rand = "123456"
+        rand = str(random.randint(9999, 100000))
+        self.ping_times[rand] = time.time()
         self.parent.await_answer(['','PONG','', ':%s' % rand],self.pong)
         self.parent.send('PING '+rand)
         self.channel = params.channel
         self.parent.privmsg('[ping] warte...',params.channel)
         
-    def pong(self,line):
-        self.parent.privmsg('[pong] eingetroffen',self.channel)
+    def pong(self,params):
+        if (len(params)>=4):
+          key = str(params[3][1:])
+          if key in self.ping_times:
+            t = self.ping_times[key]
+            now = time.time()
+            diff = (now - float(t))*1000
+            self.parent.privmsg(u'[pong] eingetroffen nach %dms' % (diff),self.channel)
+          else:
+            self.parent.privmsg(u'[pong] eingetroffen, messung aber unmöglich - %s' % str(key), self.channel)
+        else:
+          self.parent.privmsg('[pong] eingetroffen',self.channel)
         
     def returnutf8(self,params):
         if(len(params.args)>=1):
@@ -91,17 +100,4 @@ class mod_system:
             self.parent.print_err('Befehlsliste - %s' % msg)
             msg = u'[Fehler] Keine Befehle gefunden... o0'
         self.parent.privmsg(msg,params.channel)
-
-    def short_version(self, params):
-        c = pysvn.Client()
-        e = c.info('.')
-        self.parent.privmsg(u'pyChao, rev: ' + str(e.revision.number) + ', committed by: ' + e.commit_author, params.channel)
-
-    def long_version(self, params):
-        c = pysvn.Client()
-        e = c.info('.')
-        self.parent.privmsg(u'URL       : ' + e.url, params.channel)
-        self.parent.privmsg(u'Revision  : ' + str(e.revision.number), params.channel)
-        self.parent.privmsg(u'Committer : ' + e.commit_author, params.channel)
-        self.parent.privmsg(u'Time      : ' + time.strftime(u'%a, %d %b %Y %H:%M:%S', time.localtime(e.commit_time)), params.channel)
 

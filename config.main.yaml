@@ -1,4 +1,4 @@
-host: 'kornbluth.freenode.net'
+host: 'irc.libera.chat'
 port: 6665
 ident: 'pyChao'
 password: 'dwarfdwarf'
@@ -8,49 +8,49 @@ channels:
     - '#Zanzibar'
     - '#g33ky'
     - '#Sacred-Chao'
-#    - '#seto-gmbh'
-    - '#piratenpartei-sachsen'
-#    - '#countdown'
-    - '#chaosradio'
-    - '#beem'
+    - '#isso'
+    - '#fdroid'
+    - '##mulischaf'
+    - '#reddit-de'
+    - '#multirotors'
 show messages:
     - 'error'
     - 'notice'
     - 'routine'
 modules:
-    mod_triggers:
-        file: mod_triggers
-        class: mod_triggers
-        config:
-            dbpath: '../db/fact.sqlite'
-            trigger_time: '-7 days'
+#    mod_triggers:
+#        file: mod_triggers
+#        class: mod_triggers
+#        config:
+#            dbpath: '../db/fact.sqlite'
+#            trigger_time: '-14 days'
 
 ################################################################################
 # DEPRECATED - ersetzt durch funktionalität in Webchao (Djang-Projekt)         #
 ################################################################################
-#    export_web:
-#        file:         export_web
-#        class:        export_web
-#        config:
-#            dbpath:     '../db/fact.sqlite'
-#            dir:        'html/'
-#            pub_root:   'http://home.g33ky.de/fact/'
-#            css:        '/css/facts.css'
+    export_web:
+        file:         export_web
+        class:        export_web
+        config:
+            dbpath:     '../db/fact.sqlite'
+            dir:        'html/'
+            pub_root:   'http://fact.g33ky.de/'
+            css:        '/css/facts.css'
 ##            analytics:  'UA-8889221-1'
-#            feed:       '/lastfacts.xml'
-#    export_rss:
-#        file:             export_rss
-#        class:            export_rss
-#        config:
-#            dbpath:       '../db/fact.sqlite'
-#            length:       25
-#            file:         'last.xml'
-#            adm_mail:     facts@g33ky.de
-#            pub_url:      http://home.g33ky.de/lastfacts.xml
-#            link:         http://g33ky.de
-#            description:  'die neuesten Facts des pyChao-IRC-Bots'
-#            rights:       'cc-by-sa'
-#            web_url:      'http://home.g33ky.de/fact/'
+            feed:       '/feed.xml'
+    export_rss:
+        file:             export_rss
+        class:            export_rss
+        config:
+            dbpath:       '../db/fact.sqlite'
+            length:       25
+            file:         'feed.xml'
+            adm_mail:     facts@g33ky.de
+            pub_url:      http://fact.g33ky.de/feed.xml
+            link:         http://g33ky.de
+            description:  'die neuesten Facts des pyChao-IRC-Bots'
+            rights:       'cc-by-sa'
+            web_url:      'http://fact.g33ky.de/'
 ################################################################################
 
     rss:
@@ -65,20 +65,20 @@ modules:
 #                dat*: 'https://pod.geraspora.de/public/drazraeltod.atom'
 #                dat.cubbies: 'http://cubbi.es/a9eb78101a70ed20?format=atom'
 #                chrono.gr: 'http://www.google.com/reader/public/atom/user%2F00885855959396402091%2Fstate%2Fcom.google%2Fbroadcast'
-                g33ky: 'http://www.g33ky.de/feed/blog'
+                g33ky: 'https://g33ky.de/index.xml'
 #                comics: 'http://feeds.feedburner.com/webcomix'
 #                quotes: 'http://feeds.feedburner.com/quotesViaDrAzraelTod'
 #                qimonda: 'http://feeds.feedburner.com/Qimonda'
-                dat.gr: 'http://feeds.feedburner.com/StarredByDrAzraelTod'
+#                dat.gr: 'http://feeds.feedburner.com/StarredByDrAzraelTod'
                 fefe: 'http://blog.fefe.de/rss.xml'
-                dat.fm: http://ws.audioscrobbler.com/1.0/user/Dr_Azrael_Tod/recenttracks.rss
-                dat.fm.loved: 'http://ws.audioscrobbler.com/2.0/user/Dr_Azrael_Tod/lovedtracks.rss'
-                snoo.fm: http://ws.audioscrobbler.com/1.0/user/sirsnookie/recenttracks.rss
-                snoo.fm.loved: 'http://ws.audioscrobbler.com/2.0/user/sirsnookie/lovedtracks.rss'
-                makx.fm: 'http://ws.audioscrobbler.com/1.0/user/Profmakx/recenttracks.rss'
-                makx.fm.loved: 'http://ws.audioscrobbler.com/2.0/user/profmakx/lovedtracks.rss'
-                fynn.fm: 'http://ws.audioscrobbler.com/1.0/user/fynn__/recenttracks.rss'
-                fynn.fm.loved: 'http://ws.audioscrobbler.com/2.0/user/fynn__/lovedtracks.rss'
+#                dat.fm: https://xiffy.nl/lastfmrss.php?user=Dr_Azrael_Tod
+#                dat.fm.loved: https://xiffy.nl/lastfmrss.php?user=Dr_Azrael_Tod&loved
+#                snoo.fm: http://ws.audioscrobbler.com/1.0/user/sirsnookie/recenttracks.rss
+#                snoo.fm.loved: 'http://ws.audioscrobbler.com/2.0/user/sirsnookie/lovedtracks.rss'
+#                makx.fm: 'http://ws.audioscrobbler.com/1.0/user/Profmakx/recenttracks.rss'
+#                makx.fm.loved: 'http://ws.audioscrobbler.com/2.0/user/profmakx/lovedtracks.rss'
+#                fynn.fm: 'http://ws.audioscrobbler.com/1.0/user/fynn__/recenttracks.rss'
+#                fynn.fm.loved: 'http://ws.audioscrobbler.com/2.0/user/fynn__/lovedtracks.rss'
 #                loba.fm: http://ws.audioscrobbler.com/1.0/user/1oba/recenttracks.rss
 #                cindy.fm: http://ws.audioscrobbler.com/1.0/user/Amidala1/recenttracks.rss
 #                wolf.fm: 'http://ws.audioscrobbler.com/1.0/user/Grauw0lf/recenttracks.rss'
@@ -89,20 +89,22 @@ modules:
                 lmag: 'http://www.linux-magazin.de/rss/feed/news'
 #                zanzibar: 'http://friendfeed.com/rooms/g33ky?format=atom'
                 wdr2k: 'http://podcast.wdr.de/radio/wdr2kabarett.xml'
-                'känguru': 'http://www.fritz.de/media/podcasts/serien/neues_vom_kaenguru.feed.podcast.xml'
+#                kaenguru: 'http://www.fritz.de/media/podcasts/serien/neues_vom_kaenguru.feed.podcast.xml'
 #                dat.test: 'http://alpha.libre.fm/rdf.php?fmt=rss&page=%2Fuser%2FDr_Azrael_Tod%2Frecent-tracks'
                 golem: 'http://rss.golem.de/rss.php?feed=ATOM1.0'
 #                c3d2: 'http://www.c3d2.de/news-atom.xml'
 #                pentaradio: 'http://www.c3d2.de/pentaradio.xml'
 #                c3d2pod: 'http://www.c3d2.de/podcast.xml'
-                soup: 'http://soup.g33ky.de/rss'
+#                soup: 'http://soup.g33ky.de/rss'
+                spon: 'http://www.spiegel.de/schlagzeilen/index.rss'
+                wochenr: 'http://www.ndr.de/info/podcast3002.xml'
     facts:
         file: facts
         class: mod_facts
         config:
             dbpath: '../db/fact.sqlite'
             deleting_users: [Dr_Azrael_Tod, profmakx, Snookie]
-            fact_url: 'http://g33ky.de/fid/%s'
+            fact_url: 'http://fact.g33ky.de/%s'
     nicknames:
         file: mod_nicknames
         class: mod_nicknames
@@ -123,9 +125,12 @@ modules:
                 keks:
                     singular:   'Keks'
                     plural:     'Kekse'
-                bier: 
+                bier:
                     singular:   'Bier'
                     plural:     'Biere'
+                penis:
+                    singular:   'Penis'
+                    plural:     'Penes'
     date:
         file: mod_ddate
         class: mod_ddate
@@ -197,7 +202,7 @@ overwrite profiles:
            - '#zanzibar'
         port: 6665
     euirc:
-        host: 'irc6.euirc.net'
+        host: 'irc.de.euirc.net'
         channels:
             - '#zanzibar'
             - '#ipv6'

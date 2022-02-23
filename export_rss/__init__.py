@@ -5,7 +5,7 @@ import codecs
 import datetime
 import time
 import re
-from pysqlite2 import dbapi2 as sqlite3
+from sqlite3 import dbapi2 as sqlite3
 
 class export_rss:
     def __init__(self, parent,config):
@@ -34,7 +34,7 @@ class export_rss:
         
     def get(self):
         count = self.config['length']
-        facts = self.DBcursor.execute(u'SELECT fid, nickname, fact, date from fact ORDER BY date DESC LIMIT %s' % count).fetchall()
+        facts = self.DBcursor.execute(u'SELECT id, nickname, fact, date from fact ORDER BY date DESC LIMIT %s' % count).fetchall()
         return facts
         
     def write(self, lines):
@@ -87,12 +87,12 @@ class export_rss:
             content = u'%s' % self.xml_escape(f[2])
             
             
-            r1 = ur"\b(([A-Za-z]{3,5})://([-A-Za-z0-9+&@#/%?=~_()|!:,.;]*[-A-Za-z0-9+&@#/%=~_()|]))"
-            r2 = ur'&lt;a rel="nofollow" target="_blank" href="\g<1>"&gt;\g<3>&lt;/a&gt;'
+            r1 = r"\b(([A-Za-z]{3,5})://([-A-Za-z0-9+&@#/%?=~_()|!:,.;]*[-A-Za-z0-9+&@#/%=~_()|]))"
+            r2 = r'&lt;a rel="nofollow" target="_blank" href="\g<1>"&gt;\g<3>&lt;/a&gt;'
             lcontent = re.sub(r1,r2,content)
             
-            r1 = ur"#([1-9][0-9]+)"
-            r2 = ur'&lt;a href="http://home.g33ky.de/fact/\g<1>.html"&gt;#\g<1>&lt;/a&gt;'
+            r1 = r"#([1-9][0-9]+)"
+            r2 = r'&lt;a href="http://home.g33ky.de/fact/\g<1>.html"&gt;#\g<1>&lt;/a&gt;'
             lcontent = re.sub(r1,r2,lcontent)
 
             

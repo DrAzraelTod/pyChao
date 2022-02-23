@@ -5,7 +5,7 @@ import re
 import codecs
 import datetime
 import time
-from pysqlite2 import dbapi2 as sqlite3
+from sqlite3 import dbapi2 as sqlite3
 
 class export_web:
     def __init__(self, parent,config):
@@ -36,11 +36,11 @@ class export_web:
         self.DBcursor = self.DBconn.cursor()
         
     def get(self, fid):
-        fact = self.DBcursor.execute(u'SELECT fid, nickname, fact, date, channel from fact where fid=%s limit 1' % fid).fetchall()
+        fact = self.DBcursor.execute(u'SELECT id, nickname, fact, date, channel from fact where id=%s limit 1' % id).fetchall()
         return fact[0]
 
     def get_all(self):
-        facts = self.DBcursor.execute(u'SELECT fid, nickname, fact, date, channel from fact ORDER BY date DESC').fetchall()
+        facts = self.DBcursor.execute(u'SELECT id, nickname, fact, date, channel from fact ORDER BY date DESC').fetchall()
         return facts
         
     def write(self, lines, filename):
@@ -114,12 +114,12 @@ class export_web:
     def render(self, f):
         content = u'%s' % self.html_escape(f[2])
         
-        r1 = ur"[@#]([1-9][0-9]+)"
-        r2 = ur'<a href="/fact/\g<1>.html">#\g<1></a>'
+        r1 = r"[@#]([1-9][0-9]+)"
+        r2 = r'<a href="/fact/\g<1>.html">#\g<1></a>'
         content = re.sub(r1,r2,content)
         
-        r1 = ur"\b(([A-Za-z]{3,5})://([-A-Za-z0-9+&@#/%?=~_()|!:,.;]*[-A-Za-z0-9+&@#/%=~_()|]))"
-        r2 = ur'<a rel="nofollow" target="_blank" href="\g<1>">\g<3></a>'
+        r1 = r"\b(([A-Za-z]{3,5})://([-A-Za-z0-9+&@#/%?=~_()|!:,.;]*[-A-Za-z0-9+&@#/%=~_()|]))"
+        r2 = r'<a rel="nofollow" target="_blank" href="\g<1>">\g<3></a>'
         content = re.sub(r1,r2,content)
         
         lines = self.page_prefix()

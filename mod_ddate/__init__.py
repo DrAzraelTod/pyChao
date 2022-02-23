@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from ddate import *
+from .ddate import *
 from datetime import *
 
 class mod_ddate(object):
@@ -22,7 +22,7 @@ class mod_ddate(object):
                 d = datetime.strptime(params.args[0], "%d.%m.%Y").date()
                 x.fromDate(d)
                 msg = str(x)
-            except Exception, inst:
+            except Exception as inst:
                 self.parent.print_notice(inst)
                 msg = params.target + u': FNORD!'
         self.parent.privmsg(msg, params.channel)
