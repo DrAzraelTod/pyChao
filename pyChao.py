@@ -1,5 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
+import collections
 import sys
 import socket
 import time
@@ -15,8 +16,7 @@ class Parameters(object):
         self.target = target
         self.message = message
         self.follow = " ".join(args)
-        self.args \
-            = args
+        self.args = args
         self.whole_string = command + ' ' + self.follow
         self.query = query
 
@@ -56,7 +56,11 @@ def encode_msg(msg):
             continue
 
 
+Command = collections.namedtuple("Command", ['callback', 'help_text', 'regex'])
+
+
 class PyChao(object):
+
     def __init__(self, conf):
         self.msgwaitlist = []
         self.config = conf.data
@@ -81,14 +85,13 @@ class PyChao(object):
     def import_modules(self):
         cfg = self.config['modules']
         for mod in cfg:
-            tempmod = __import__(cfg[mod]['file'], )
-            tempinst = getattr(
-                tempmod, cfg[mod]['class'])(self, cfg[mod]['config'])
+            temp_module = __import__(cfg[mod]['file'], )
+            temp_instance = getattr(temp_module, cfg[mod]['class'])(self, cfg[mod]['config'])
 
-    def register_callback(self, command, callback, helptext, regex=False):
+    def register_callback(self, command, callback, help_text, regex=False):
         if command in self.commands:
             return
-        self.commands[command] = [callback, helptext, regex]
+        self.commands[command] = Command(callback, help_text, regex)
 
     def await_answer(self, msg_array, callback):
         self.msgwaitlist.append([msg_array, callback])
